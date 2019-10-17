@@ -3797,7 +3797,7 @@ LOAD c:/users/haru/.p2/pool/plugins/fr.ac6.mcu.externaltools.arm-none.win32_1.17
                 [!provide]                PROVIDE (__fini_array_end = .)
                 0x08002ed0                _sidata = LOADADDR (.data)
 
-.data           0x20000000      0x144 load address 0x08002ed0
+.data           0x20000000      0x160 load address 0x08002ed0
                 0x20000000                . = ALIGN (0x4)
                 0x20000000                _sdata = .
  *(.data)
@@ -3808,55 +3808,54 @@ LOAD c:/users/haru/.p2/pool/plugins/fr.ac6.mcu.externaltools.arm-none.win32_1.17
                 0x200000a4                USBD_CUSTOM_HID
  .data          0x200000dc        0x4 Src/system_stm32f1xx.o
                 0x200000dc                SystemCoreClock
- .data          0x200000e0       0x12 Src/usbd_custom_hid_if.o
+ .data          0x200000e0       0x2d Src/usbd_custom_hid_if.o
                 0x200000e0                USBD_CustomHID_fops_FS
- *fill*         0x200000f2        0x2 
- .data          0x200000f4       0x50 Src/usbd_desc.o
-                0x200000f4                USBD_FS_DeviceDesc
-                0x20000108                USBD_LangIDDesc
-                0x2000010c                USBD_StringSerial
-                0x20000128                FS_Desc
+ *fill*         0x2000010d        0x3 
+ .data          0x20000110       0x50 Src/usbd_desc.o
+                0x20000110                USBD_FS_DeviceDesc
+                0x20000124                USBD_LangIDDesc
+                0x20000128                USBD_StringSerial
+                0x20000144                FS_Desc
  *(.data*)
-                0x20000144                . = ALIGN (0x4)
-                0x20000144                _edata = .
+                0x20000160                . = ALIGN (0x4)
+                0x20000160                _edata = .
 
-.igot.plt       0x20000144        0x0 load address 0x08003014
- .igot.plt      0x20000144        0x0 c:/users/haru/.p2/pool/plugins/fr.ac6.mcu.externaltools.arm-none.win32_1.17.0.201812190825/tools/compiler/bin/../lib/gcc/arm-none-eabi/7.3.1/thumb/v7-m/crtbegin.o
-                0x20000144                . = ALIGN (0x4)
+.igot.plt       0x20000160        0x0 load address 0x08003030
+ .igot.plt      0x20000160        0x0 c:/users/haru/.p2/pool/plugins/fr.ac6.mcu.externaltools.arm-none.win32_1.17.0.201812190825/tools/compiler/bin/../lib/gcc/arm-none-eabi/7.3.1/thumb/v7-m/crtbegin.o
+                0x20000160                . = ALIGN (0x4)
 
-.bss            0x20000144      0x770 load address 0x08003014
-                0x20000144                _sbss = .
-                0x20000144                __bss_start__ = _sbss
+.bss            0x20000160      0x770 load address 0x08003030
+                0x20000160                _sbss = .
+                0x20000160                __bss_start__ = _sbss
  *(.bss)
- .bss           0x20000144       0x1c c:/users/haru/.p2/pool/plugins/fr.ac6.mcu.externaltools.arm-none.win32_1.17.0.201812190825/tools/compiler/bin/../lib/gcc/arm-none-eabi/7.3.1/thumb/v7-m/crtbegin.o
- .bss           0x20000160        0x1 Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.o
- *fill*         0x20000161        0x3 
- .bss           0x20000164       0x1c Src/usbd_conf.o
+ .bss           0x20000160       0x1c c:/users/haru/.p2/pool/plugins/fr.ac6.mcu.externaltools.arm-none.win32_1.17.0.201812190825/tools/compiler/bin/../lib/gcc/arm-none-eabi/7.3.1/thumb/v7-m/crtbegin.o
+ .bss           0x2000017c        0x1 Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.o
+ *fill*         0x2000017d        0x3 
+ .bss           0x20000180       0x1c Src/usbd_conf.o
  *(.bss*)
  *(COMMON)
- COMMON         0x20000180        0x4 Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.o
-                0x20000180                uwTick
- COMMON         0x20000184      0x2c4 Src/usb_device.o
-                0x20000184                hUsbDeviceFS
- COMMON         0x20000448      0x26c Src/usbd_conf.o
-                0x20000448                hpcd_USB_FS
- COMMON         0x200006b4      0x200 Src/usbd_desc.o
-                0x200006b4                USBD_StrDesc
-                0x200008b4                . = ALIGN (0x4)
-                0x200008b4                _ebss = .
-                0x200008b4                __bss_end__ = _ebss
+ COMMON         0x2000019c        0x4 Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.o
+                0x2000019c                uwTick
+ COMMON         0x200001a0      0x2c4 Src/usb_device.o
+                0x200001a0                hUsbDeviceFS
+ COMMON         0x20000464      0x26c Src/usbd_conf.o
+                0x20000464                hpcd_USB_FS
+ COMMON         0x200006d0      0x200 Src/usbd_desc.o
+                0x200006d0                USBD_StrDesc
+                0x200008d0                . = ALIGN (0x4)
+                0x200008d0                _ebss = .
+                0x200008d0                __bss_end__ = _ebss
 
 ._user_heap_stack
-                0x200008b4      0x604 load address 0x08003014
-                0x200008b8                . = ALIGN (0x8)
- *fill*         0x200008b4        0x4 
-                0x200008b8                PROVIDE (end = .)
+                0x200008d0      0x600 load address 0x08003030
+                0x200008d0                . = ALIGN (0x8)
+                0x200008d0                PROVIDE (end = .)
                 [!provide]                PROVIDE (_end = .)
-                0x20000ab8                . = (. + _Min_Heap_Size)
- *fill*         0x200008b8      0x200 
-                0x20000eb8                . = (. + _Min_Stack_Size)
- *fill*         0x20000ab8      0x400 
-                0x20000eb8                . = ALIGN (0x8)
+                0x20000ad0                . = (. + _Min_Heap_Size)
+ *fill*         0x200008d0      0x200 
+                0x20000ed0                . = (. + _Min_Stack_Size)
+ *fill*         0x20000ad0      0x400 
+                0x20000ed0                . = ALIGN (0x8)
 
 /DISCARD/
  libc.a(*)
@@ -4160,7 +4159,7 @@ OUTPUT(procom_controller.elf elf32-littlearm)
  .debug_line    0x00009ea5      0x90c Src/usbd_desc.o
  .debug_line    0x0000a7b1       0x7d startup/startup_stm32f103xb.o
 
-.debug_str      0x00000000    0x6c889
+.debug_str      0x00000000    0x6c88a
  .debug_str     0x00000000    0x65a2c Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.o
                               0x65d70 (size before relaxing)
  .debug_str     0x00065a2c      0x2e1 Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_cortex.o
@@ -4175,31 +4174,31 @@ OUTPUT(procom_controller.elf elf32-littlearm)
                               0x6584b (size before relaxing)
  .debug_str     0x00066b7f      0x1a2 Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_usb.o
                               0x65b91 (size before relaxing)
- .debug_str     0x00066d21     0x5136 Middlewares/ST/STM32_USB_Device_Library/Class/CustomHID/Src/usbd_customhid.o
-                              0x6a896 (size before relaxing)
- .debug_str     0x0006be57      0x294 Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.o
-                              0x6a55d (size before relaxing)
- .debug_str     0x0006c0eb      0x11b Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.o
-                              0x6a477 (size before relaxing)
- .debug_str     0x0006c206       0x67 Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.o
-                              0x6a3a4 (size before relaxing)
- .debug_str     0x0006c26d       0x67 Src/main.o
-                              0x6a11d (size before relaxing)
- .debug_str     0x0006c2d4       0x3f Src/stm32f1xx_hal_msp.o
+ .debug_str     0x00066d21     0x5137 Middlewares/ST/STM32_USB_Device_Library/Class/CustomHID/Src/usbd_customhid.o
+                              0x6a897 (size before relaxing)
+ .debug_str     0x0006be58      0x294 Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.o
+                              0x6a55e (size before relaxing)
+ .debug_str     0x0006c0ec      0x11b Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.o
+                              0x6a478 (size before relaxing)
+ .debug_str     0x0006c207       0x67 Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.o
+                              0x6a3a5 (size before relaxing)
+ .debug_str     0x0006c26e       0x67 Src/main.o
+                              0x6a11e (size before relaxing)
+ .debug_str     0x0006c2d5       0x3f Src/stm32f1xx_hal_msp.o
                               0x656ae (size before relaxing)
- .debug_str     0x0006c313       0xc4 Src/stm32f1xx_it.o
+ .debug_str     0x0006c314       0xc4 Src/stm32f1xx_it.o
                               0x65a57 (size before relaxing)
- .debug_str     0x0006c3d7       0x69 Src/system_stm32f1xx.o
+ .debug_str     0x0006c3d8       0x69 Src/system_stm32f1xx.o
                               0x65715 (size before relaxing)
- .debug_str     0x0006c440       0xd5 Src/usb_device.o
-                              0x6a64e (size before relaxing)
- .debug_str     0x0006c515       0x65 Src/usbd_conf.o
-                              0x6b0d3 (size before relaxing)
- .debug_str     0x0006c57a       0x7e Src/usbd_custom_hid_if.o
-                              0x6a5bb (size before relaxing)
- .debug_str     0x0006c5f8      0x262 Src/usbd_desc.o
-                              0x6a2ea (size before relaxing)
- .debug_str     0x0006c85a       0x2f startup/startup_stm32f103xb.o
+ .debug_str     0x0006c441       0xd5 Src/usb_device.o
+                              0x6a64f (size before relaxing)
+ .debug_str     0x0006c516       0x65 Src/usbd_conf.o
+                              0x6b0d4 (size before relaxing)
+ .debug_str     0x0006c57b       0x7e Src/usbd_custom_hid_if.o
+                              0x6a5bc (size before relaxing)
+ .debug_str     0x0006c5f9      0x262 Src/usbd_desc.o
+                              0x6a2eb (size before relaxing)
+ .debug_str     0x0006c85b       0x2f startup/startup_stm32f103xb.o
                                  0x67 (size before relaxing)
 
 .comment        0x00000000       0x7f
