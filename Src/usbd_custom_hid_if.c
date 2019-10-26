@@ -92,20 +92,34 @@
 __ALIGN_BEGIN static uint8_t CUSTOM_HID_ReportDesc_FS[USBD_CUSTOM_HID_REPORT_DESC_SIZE] __ALIGN_END =
 {
   /* USER CODE BEGIN 0 */
-	    0x05, 0x01,                    // USAGE_PAGE (Generic Desktop)
-	    0x09, 0x04,                    // USAGE (Joystick)
-	    0xa1, 0x01,                    // COLLECTION (Application)
-	    0x09, 0x01,                    //   USAGE (Pointer)
-	    0xa1, 0x00,                    //   COLLECTION (Physical)
-	    0x15, 0x81,                    //     LOGICAL_MINIMUM (-127)
-	    0x26, 0x80, 0x00,              //     LOGICAL_MAXIMUM (128)
-	    0x75, 0x08,                    //     REPORT_SIZE (8)
-	    0x95, 0x03,                    //     REPORT_COUNT (3)
-	    0x09, 0x30,                    //     USAGE (X)
-	    0x09, 0x31,                    //     USAGE (Y)
-	    0x09, 0x32,                    //     USAGE (Z)
-	    0x81, 0x02,                    //     INPUT (Data,Var,Abs)
-	    0xc0,                          //     END_COLLECTION
+        0x05, 0x01,                     // Usage Page (Generic Desktop)
+        0x09, 0x04,                     // Usage (Joystick)
+        0xA1, 0x01,                     // Collection (Application)
+        0x15, 0x00,                     // Logical Minimum (0)
+        0x25, 0x01,                     // Logical Maximum (1)
+        0x75, 0x01,                     // Report Size (1)
+        0x95, 0x08,                     // Report Count (8)
+        0x05, 0x09,                     // Usage Page (Button)
+        0x19, 0x01,                     // Usage Minimum (Button #1)
+        0x29, 0x08,                     // Usage Maximum (Button #8)
+        0x81, 0x02,                     // Input (variable,absolute)
+        0x05, 0x01,                     // Usage Page (Generic Desktop)
+        0x09, 0x01,                     // Usage (Pointer)
+        0xA1, 0x00,                     // Collection ()
+		0x15, 0x81,                     //   Logical Minimum (-127)
+		0x25, 0x7f,  					//   Logical Maximum (127)
+	    0x75, 0x08,                     //   Report Size (8)
+        0x95, 0x01,                     //   Report Count (1)
+		0x09, 0x30, 					//   USAGE (X)
+        0x81, 0x02,                     //   Input (variable,absolute)
+		0x15, 0x00,                     //   Logical Minimum (0)
+		0x26, 0xff, 0x00,   			//   Logical Maximum (255)
+	    0x75, 0x08,                     //   Report Size (8)
+        0x95, 0x02,                     //   Report Count (2)
+		0x09, 0x33, 					//   USAGE (Rx)
+		0x09, 0x34, 					//   USAGE (Ry)
+        0x81, 0x02,                     //   Input (variable,absolute)
+        0xC0,                           // End Collection
   /* USER CODE END 0 */
   0xC0    /*     END_COLLECTION	             */
 };

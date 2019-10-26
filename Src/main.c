@@ -24,7 +24,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "usbd_customhid.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -45,6 +45,7 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
+extern USBD_HandleTypeDef hUsbDeviceFS;
 
 /* USER CODE END PV */
 
@@ -57,6 +58,11 @@ static void MX_GPIO_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+void send_reports(){
+	uint8_t report[4] = {0b10101010,60 | 0x80,0xff,0};
+	USBD_CUSTOM_HID_SendReport(&hUsbDeviceFS,report,4);
+	HAL_Delay(2);
+}
 
 /* USER CODE END 0 */
 
@@ -98,6 +104,7 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+	  send_reports();
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
