@@ -47,21 +47,37 @@
 /* USER CODE BEGIN PV */
 extern USBD_HandleTypeDef hUsbDeviceFS;
 
+volatile int16_t counter = 0;
+int8_t counter_tmp;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 /* USER CODE BEGIN PFP */
+void __ENABLE_ENC_IRQ(void);
+void __DISABLE_ENC_IRQ(void);
 
+uint8_t test = 0b10101010;
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 void send_reports(){
-	uint8_t report[4] = {0b10101010,60 | 0x80,0xff,0};
+	if(counter > 127)
+		counter_tmp = 127;
+	else if(counter < -127)
+		counter_tmp = 129;
+	else
+		counter_tmp = counter;
+	if(counter< 0)
+		counter_tmp |= 0b10000000;
+	uint8_t report[4] = {test,counter_tmp,0xff,0};
+	test = ~test;
+	__DISABLE_ENC_IRQ();
 	USBD_CUSTOM_HID_SendReport(&hUsbDeviceFS,report,4);
-	HAL_Delay(2);
+	__ENABLE_ENC_IRQ();
+	HAL_Delay(1);
 }
 
 /* USER CODE END 0 */
@@ -163,14 +179,68 @@ void SystemClock_Config(void)
   */
 static void MX_GPIO_Init(void)
 {
+  GPIO_InitTypeDef GPIO_InitStruct = {0};
 
   /* GPIO Ports Clock Enable */
   __HAL_RCC_GPIOD_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
 
+  /*Configure GPIO pins : PA0 PA1 */
+  GPIO_InitStruct.Pin = GPIO_PIN_0|GPIO_PIN_1;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING_FALLING;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+  /* EXTI interrupt init*/
+  HAL_NVIC_SetPriority(EXTI0_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI0_IRQn);
+
+  HAL_NVIC_SetPriority(EXTI1_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI1_IRQn);
+
 }
 
 /* USER CODE BEGIN 4 */
+
+void __ENABLE_ENC_IRQ(){
+	  HAL_NVIC_EnableIRQ(EXTI0_IRQn);
+	  HAL_NVIC_EnableIRQ(EXTI1_IRQn);
+}
+
+void __DISABLE_ENC_IRQ(){
+	 HAL_NVIC_DisableIRQ(EXTI0_IRQn);
+	 HAL_NVIC_DisableIRQ(EXTI1_IRQn);
+}
+
+volatile uint32_t prev_tick = 0;
+volatile uint8_t prev_status = 0;
+volatile uint32_t int_tick = 0;
+volatile uint32_t diff_tick = 0;
+volatile uint8_t status = 0;
+volatile uint8_t direction = 0;
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
+	int_tick = HAL_GetTick();
+	diff_tick = int_tick - prev_tick;
+	status = GPIOA->IDR & 0b00000011;
+	if(prev_status == status)
+		return;
+
+	if(prev_status == 0 && status == 1){
+		direction = 0;
+		goto end;
+	}
+	if(prev_status == 0 && status == 2){
+		direction = 1;
+		goto end;
+	}
+
+	if(status == 0)
+		counter += (direction==0)?2:-2;
+
+	end:
+	prev_status = status;
+	prev_tick = int_tick;
+}
 
 /* USER CODE END 4 */
 
