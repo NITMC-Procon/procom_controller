@@ -35,6 +35,14 @@
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
 
+enum shift_mode{
+	DRIVE,
+	REVERSE,
+	NEUTRAL,
+	BOOST,
+	FLOAT
+};
+
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -53,6 +61,8 @@ volatile uint32_t adc_data[4] = {0};
 
 volatile int16_t counter = 0;
 int8_t counter_tmp;
+
+uint8_t prev_shift = FLOAT;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -64,11 +74,28 @@ static void MX_ADC1_Init(void);
 void __ENABLE_ENC_IRQ(void);
 void __DISABLE_ENC_IRQ(void);
 
-uint8_t test = 0b10101010;
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+uint8_t parse_shift(){
+	uint8_t mode = (10 * ((adc_data[2]*10) / 8192)) + ((adc_data[3] * 10)/ 8192);
+	switch(mode){
+	case 24: //boost
+		return BOOST;
+	case 40:
+		return REVERSE;
+	case 42:
+		return NEUTRAL;
+	case 44:
+		return DRIVE;
+	default:
+		return FLOAT;
+	}
+}
+
+uint8_t shift;
+uint8_t shift_repo;
 void send_reports(){
 	if(counter > 127)
 		counter_tmp = 127;
@@ -78,8 +105,12 @@ void send_reports(){
 		counter_tmp = counter;
 	if(counter< 0)
 		counter_tmp |= 0b10000000;
-	uint8_t report[4] = {test,counter_tmp,adc_data[0] >> 4,adc_data[1] >> 4};
-	test = ~test;
+	shift= parse_shift();
+	if(shift == prev_shift)
+		shift_repo = 0;
+	else
+		shift_repo = 1 << shift;
+	uint8_t report[4] = {shift_repo,counter_tmp,adc_data[0] >> 4,adc_data[1] >> 4};
 	__DISABLE_ENC_IRQ();
 	USBD_CUSTOM_HID_SendReport(&hUsbDeviceFS,report,4);
 	__ENABLE_ENC_IRQ();
@@ -329,7 +360,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 	}
 
 	if(status == 0)
-		counter += (direction==0)?2:-2;
+		counter += (direction==0)?8:-8;
 
 	end:
 	prev_status = status;
