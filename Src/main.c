@@ -59,7 +59,7 @@ extern USBD_HandleTypeDef hUsbDeviceFS;
 
 volatile uint32_t adc_data[4] = {0};
 
-volatile int16_t counter = 0;
+volatile int8_t counter = 0;
 int8_t counter_tmp;
 
 uint8_t prev_shift = FLOAT;
@@ -360,7 +360,13 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 	}
 
 	if(status == 0)
-		counter += (direction==0)?8:-8;
+		if(direction == 0){
+			if(counter + 8 <= 127)
+				counter += 8;
+		}else{
+			if(counter - 8 >= -127)
+				counter -= 8;
+		}
 
 	end:
 	prev_status = status;
