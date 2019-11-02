@@ -59,8 +59,7 @@ extern USBD_HandleTypeDef hUsbDeviceFS;
 
 volatile uint32_t adc_data[4] = {0};
 
-volatile int8_t counter = 0;
-int8_t counter_tmp;
+volatile uint8_t counter = 0;
 
 uint8_t prev_shift = FLOAT;
 /* USER CODE END PV */
@@ -81,13 +80,14 @@ void __DISABLE_ENC_IRQ(void);
 uint8_t parse_shift(){
 	uint8_t mode = (10 * ((adc_data[2]*10) / 8192)) + ((adc_data[3] * 10)/ 8192);
 	switch(mode){
-	case 24: //boost
-		return BOOST;
-	case 40:
+//	case 24: //boost
+//		return BOOST;
+//	case 40:
+	case 00:
 		return REVERSE;
-	case 42:
-		return NEUTRAL;
-	case 44:
+//	case 42:
+//		return NEUTRAL;
+//	case 44:
 		return DRIVE;
 	default:
 		return FLOAT;
@@ -97,20 +97,12 @@ uint8_t parse_shift(){
 uint8_t shift;
 uint8_t shift_repo;
 void send_reports(){
-	if(counter > 127)
-		counter_tmp = 127;
-	else if(counter < -127)
-		counter_tmp = 129;
-	else
-		counter_tmp = counter;
-	if(counter< 0)
-		counter_tmp |= 0b10000000;
 	shift= parse_shift();
 	if(shift == prev_shift)
 		shift_repo = 0;
 	else
 		shift_repo = 1 << shift;
-	uint8_t report[4] = {shift_repo,counter_tmp,adc_data[0] >> 4,adc_data[1] >> 4};
+	uint8_t report[4] = {shift_repo,counter,adc_data[0] >> 4,adc_data[1] >> 4};
 	__DISABLE_ENC_IRQ();
 	USBD_CUSTOM_HID_SendReport(&hUsbDeviceFS,report,4);
 	__ENABLE_ENC_IRQ();
@@ -337,15 +329,10 @@ void __DISABLE_ENC_IRQ(){
 	 HAL_NVIC_DisableIRQ(EXTI1_IRQn);
 }
 
-volatile uint32_t prev_tick = 0;
 volatile uint8_t prev_status = 0;
-volatile uint32_t int_tick = 0;
-volatile uint32_t diff_tick = 0;
 volatile uint8_t status = 0;
 volatile uint8_t direction = 0;
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
-	int_tick = HAL_GetTick();
-	diff_tick = int_tick - prev_tick;
 	status = GPIOA->IDR & 0b00000011;
 	if(prev_status == status)
 		return;
@@ -359,18 +346,18 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 		goto end;
 	}
 
-	if(status == 0)
+	if(status == 0){
 		if(direction == 0){
-			if(counter + 8 <= 127)
+			if(counter + 8 <= 255)
 				counter += 8;
 		}else{
-			if(counter - 8 >= -127)
+			if(counter - 8 >= 0)
 				counter -= 8;
 		}
+	}
 
 	end:
 	prev_status = status;
-	prev_tick = int_tick;
 }
 
 /* USER CODE END 4 */
