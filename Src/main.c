@@ -83,11 +83,13 @@ uint8_t parse_shift(){
 //	case 24: //boost
 //		return BOOST;
 //	case 40:
-	case 00:
+	case 20:
+	case 21:
 		return REVERSE;
 //	case 42:
 //		return NEUTRAL;
-//	case 44:
+	case 23:
+	case 24:
 		return DRIVE;
 	default:
 		return FLOAT;
